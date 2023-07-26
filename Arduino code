@@ -1,0 +1,35 @@
+#include <NewPing.h>
+
+const int TRIGGER_PIN = 2;  // Ultrasonic sensor trigger pin (connect to D2)
+const int ECHO_PIN = 3;     // Ultrasonic sensor echo pin (connect to D3)
+const int BUZZER_PIN = 8;   // Buzzer pin (connect to D8)
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN); // Create an instance of the NewPing library
+
+void setup() {
+  pinMode(BUZZER_PIN, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  unsigned int distance = sonar.ping_cm(); // Measure distance in centimeters
+  
+  if (distance > 0) {
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println(" cm");
+    
+    // Beep the buzzer if an object is detected within 50 cm
+    if (distance <= 50) {
+      beepBuzzer();
+    }
+  }
+  
+  delay(100); // Add a short delay for stability
+}
+
+void beepBuzzer() {
+  tone(BUZZER_PIN, 1000); // Set the buzzer frequency to 1000 Hz
+  delay(200); // Beep duration (adjust as needed)
+  noTone(BUZZER_PIN); // Turn off the buzzer
+}
